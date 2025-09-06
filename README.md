@@ -1,7 +1,16 @@
-Quiz Game 🧠
+# Quiz Game 
 A real-time multiplayer quiz game with a pixelated/8-bit aesthetic design. Players can join, answer timed questions, and compete on a live leaderboard.
 
-Features
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Socket.IO](https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socket.io&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+
+Live Demo
+Play the Game Here!
+https://quiz-game-production-9bd6.up.railway.app/
+
+ Features
  Real-time multiplayer gameplay using Socket.IO
 
  Pixelated/8-bit visual design with custom styling
@@ -12,73 +21,45 @@ Features
 
  Rank-based scoring system (1000, 800, 600, 400, 200 points)
 
- Responsive design that works on desktop and mobile
+ Responsive design for desktop and mobile
 
  SQLite database for question storage
 
- Player ready system to start games simultaneously
+ Player ready system for synchronized game starts
 
-Screenshots
-<img width="1901" height="857" alt="image" src="https://github.com/user-attachments/assets/544e2132-7bd9-4bbb-a724-5f4c4947c783" />
-<img width="1902" height="868" alt="image" src="https://github.com/user-attachments/assets/802caca8-7f3f-4aca-969e-ac75455125f0" />
-
-
-Technologies Used
-Backend: Node.js, Express.js, Socket.IO, SQLite3
-
-Frontend: HTML5, CSS3, JavaScript (ES6+)
-
-Styling: Custom pixelated CSS, Google Fonts (Jersey 10)
-
-Icons: Font Awesome
-
-Database: SQLite
-
-Project Structure
-text
-pi-quiz-game/
-├── index.html          # Main HTML file with all game screens
-├── style.css           # Pixelated styling and responsive design
-├── script.js           # Client-side logic and Socket.IO handlers
-├── server.js           # Express/Socket.IO server with game logic
-├── quiz.db             # SQLite database (created automatically)
-├── package.json        # Node.js dependencies and project info
-└── README.md           # This documentation file
-Installation & Setup
-Prerequisites
-Node.js (v14 or higher)
-
-npm (Node Package Manager)
-
-Step-by-Step Installation
-Clone the repository
-
+🛠️ Installation
 bash
-git clone https://github.com/your-username/Quiz-Game.git
+# Clone the repository
+git clone https://github.com/Kaz-scr/Quiz-Game.git
 cd Quiz-Game
-Install dependencies
 
-bash
+# Install dependencies
 npm install
-Start the server
 
-bash
+# Start the server
 node server.js
-Access the game
 
-Open your browser and navigate to http://localhost:3000
+# How to Play
+Access the game at http://localhost:3000 (Locally)
+Join: Enter your name on the welcome screen
 
-How to Play
-Join the Game: Enter your name on the welcome screen
+Ready Up: Click "I'm Ready" when all players have joined
 
-Get Ready: Click "I'm Ready" once all players have joined
+Answer: Choose the correct answer before time runs out
 
-Answer Questions: Select the correct answer before time runs out
+Compete: Earn more points for faster answers
 
-Earn Points: Faster answers earn more points.
+Win: Climb the leaderboard and claim victory!
 
-Win: The player with the highest score at the end wins!
+# Troubleshooting
+Ensure Node.js version 14+ is installed
 
-5th+ correct answers: 200 points
+Verify all dependencies are installed with npm install
 
-Database: Includes sample questions but can be easily extended
+# License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+# Contributing
+Contributions are welcome! Feel free to submit issues and pull requests.
+
+Enjoy the game!
