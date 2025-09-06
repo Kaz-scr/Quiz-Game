@@ -19,8 +19,6 @@ https://quiz-game-production-9bd6.up.railway.app/
 
  Live leaderboard with real-time updates
 
- Rank-based scoring system (1000, 800, 600, 400, 200 points)
-
  Responsive design for desktop and mobile
 
  SQLite database for question storage
