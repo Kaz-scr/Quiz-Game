@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pi Quiz Game</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div id="name-screen" class="screen">
+      <h1><i class="fas fa-brain icon"></i>Quiz Game</h1>
+      <div class="input-group">
+        <input type="text" id="name-input" placeholder="Enter your name..." maxlength="20" />
+      </div>
+      <button class="btn btn-full" onclick="submitName()">
+        <i class="fas fa-sign-in-alt icon"></i>Join Game
+      </button>
+      <div id="game-blocked-message" class="game-blocked hidden">
+        <i class="fas fa-lock icon"></i>
+        Game already in progress. Please wait for the next round.
+      </div>
+    </div>
+
+    <div id="ready-screen" class="screen hidden">
+      <h2><i class="fas fa-users icon"></i>Welcome, <span id="playerName"></span>!</h2>
+      <button class="btn btn-full" onclick="setReady()">
+        <i class="fas fa-check icon"></i>I'm Ready to Play!
+      </button>
+      
+      <div class="leaderboard">
+        <h3><i class="fas fa-user-friends icon"></i>Players Joined</h3>
+        <div id="playerList" class="player-list"></div>
+      </div>
+      
+      <div class="leaderboard">
+        <h3><i class="fas fa-thumbs-up icon"></i>Ready Players</h3>
+        <ul id="readyList"></ul>
+      </div>
+    </div>
+
+    <div id="question-screen" class="screen hidden">
+      <div class="question-header">
+        <div class="question-title" id="question-title"></div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+      
+      <div id="timer" class="timer">
+        <i class="fas fa-clock icon"></i>
+        <span id="timer-text">Get Ready...</span>
+      </div>
+      
+      <div id="options" class="options"></div>
+      
+      <div class="leaderboard">
+        <h3><i class="fas fa-trophy icon"></i>Live Leaderboard</h3>
+        <ul id="leaderboard"></ul>
+      </div>
+    </div>
+
+    <div id="results-screen" class="screen hidden">
+      <h2><i class="fas fa-chart-line icon"></i>Question Results</h2>
+      <div id="fastest-player" class="fastest-player"></div>
+      <div id="correct-answer" style="text-align: center; font-size: 1.2rem; margin: 20px 0;"></div>
+      
+      <div class="leaderboard">
+        <h3><i class="fas fa-medal icon"></i>Updated Scores</h3>
+        <ul id="results-leaderboard"></ul>
+      </div>
+      
+      <div style="text-align: center; font-size: 1.1rem; margin-top: 30px;">
+        <i class="fas fa-forward icon"></i>
+        Next question in <span class="countdown-circle" id="next-countdown">5</span> seconds...
+      </div>
+    </div>
+
+    <div id="gameover-screen" class="screen hidden">
+      <h2><i class="fas fa-flag-checkered icon"></i>Game Over!</h2>
+      
+      <div class="leaderboard">
+        <h3><i class="fas fa-crown icon"></i>Final Results</h3>
+        <ul id="final-scores" class="final-scores"></ul>
+      </div>
+      
+      <button class="btn btn-full" onclick="location.reload()">
+        <i class="fas fa-redo icon"></i>Start New Game
+      </button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
