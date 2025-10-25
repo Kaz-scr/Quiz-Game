@@ -8,7 +8,7 @@ A real-time multiplayer quiz game with a pixelated/8-bit aesthetic design. Playe
 
 Live Demo
 Play the Game Here!
-https://quiz-game-production-9bd6.up.railway.app/
+https://quiz-game-ryqd.onrender.com
 
  Features
  Real-time multiplayer gameplay using Socket.IO
