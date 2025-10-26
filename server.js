@@ -23,7 +23,8 @@ let questionTimer = null;
 const TIME_LIMITS = {
   easy: 20,
   medium: 30,
-  hard: 40
+  hard: 40,
+  mythical: 10
 };
 
 db.serialize(() => {
@@ -44,12 +45,19 @@ db.serialize(() => {
       const sample = [
         ["Capital of France?", "Paris", "Berlin", "Rome", "Madrid", "Paris", "easy"],
         ["2 + 2 = ?", "3", "4", "5", "6", "4", "easy"],
+        ["What is the primary function of HTML in web development?", "Styling", "Interactivity", "Structure", "Data Storage", "Structure", "easy"],
         ["Red Planet?", "Earth", "Mars", "Venus", "Saturn", "Mars", "easy"],
+        ["Which tool is used to manage different versions of source code?", "FTP", "IDE", "Git", "Compiler", "Git", "easy"]
         ["Sun rises in the?", "West", "East", "North", "South", "East", "medium"],
+        ["Which programming language is often used for data science and machine learning?", "Java", "Python", "C#", "Ruby", "Python", "medium"],
         ["Largest ocean?", "Atlantic", "Pacific", "Indian", "Arctic", "Pacific", "medium"],
         ["Who wrote 'Romeo and Juliet'?", "Dickens", "Shakespeare", "Austen", "Wilde", "Shakespeare", "medium"],
         ["What is the chemical symbol for gold?", "Go", "Gd", "Au", "Ag", "Au", "hard"],
+        ["What does the 'A' stand for in the ACID properties of database transactions?", "Atomicity", "Availability", "Allocation", "Authentication", "Atomicity", "hard"],
         ["Which planet has the most moons?", "Jupiter", "Saturn", "Uranus", "Neptune", "Saturn", "hard"]
+        ["What is the only letter in the alphabet not in the name of a US state?", "Q", "Z", "J", "X", "Q", "mythical"],
+        ["What is the only element on the periodic table whose symbol is not based on its English or Latin name?", "Gold", "Tungsten", "Iron", "Potassium", "Tungsten", "mythical"],
+
       ];
       sample.forEach(q => stmt.run(q));
       stmt.finalize();
@@ -58,7 +66,7 @@ db.serialize(() => {
   });
 });
 
-// Socket handling
+// Socket conmection handling
 io.on("connection", (socket) => {
   console.log(`[CONNECTION] New socket connected: ${socket.id}`);
 
@@ -66,6 +74,15 @@ io.on("connection", (socket) => {
     if (gameStarted) {
       console.log(`[BLOCKED] ${name} tried to join during game`);
       socket.emit("joinBlocked");
+      return;
+    }
+    const existingPlayer = Object.values(players).find(
+      (p) => p.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (existingPlayer) {
+      console.log(`[BLOCKED] Username '${name}' is already taken`);
+      socket.emit("nameTaken");
       return;
     }
 
@@ -116,17 +133,41 @@ io.on("connection", (socket) => {
 function startGame() {
   gameStarted = true;
   console.log("[GAME START] Loading questions...");
-  
-  db.all("SELECT * FROM questions ORDER BY RANDOM() LIMIT 5", (err, rows) => {
+
+  db.get("SELECT * FROM questions WHERE difficulty = 'mythical' ORDER BY RANDOM() LIMIT 1", (err, mythicalQ) => {
     if (err) {
-      console.error("Error loading questions:", err);
+      console.error("Error loading mythical question:", err);
       return;
     }
     
-    questionList = rows;
-    currentQuestion = 0;
-    console.log(`[GAME START] Loaded ${questionList.length} questions`);
-    sendNextQuestion();
+    // Select 5 other random questions. We will reduce the count later if the mythical Q is found.
+    const otherQsLimit = mythicalQ ? 4 : 5; 
+    
+    // Select the remaining questions that are NOT mythical
+    db.all("SELECT * FROM questions WHERE difficulty != 'mythical' ORDER BY RANDOM() LIMIT ?", [otherQsLimit], (err, otherQs) => {
+      if (err) {
+        console.error("Error loading other questions:", err);
+        return;
+      }
+
+      // Start with the other questions
+      questionList = otherQs; 
+      
+      // ONLY add the mythical question if it was found in the database
+      if (mythicalQ) {
+          questionList.push(mythicalQ);
+      }
+      
+      // Shuffle the combined list
+      for (let i = questionList.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [questionList[i], questionList[j]] = [questionList[j], questionList[i]];
+      }
+
+      currentQuestion = 0;
+      console.log(`[GAME START] Loaded ${questionList.length} questions (Mythical question status: ${mythicalQ ? 'INCLUDED' : 'MISSING'})`);
+      sendNextQuestion();
+    });
   });
 }
 
@@ -166,7 +207,9 @@ function checkAllAnswered() {
 }
 
 function processQuestionResults() {
-  const correctAnswer = questionList[currentQuestion].correct;
+  const currentQ = questionList[currentQuestion]; // Get the current question object
+  const correctAnswer = currentQ.correct;
+  const isMythical = currentQ.difficulty === 'mythical';
   console.log(`[RESULTS] Correct answer: ${correctAnswer}`);
 
   const correctPlayers = Object.entries(players)
@@ -176,20 +219,23 @@ function processQuestionResults() {
   console.log(`[RESULTS] ${correctPlayers.length} players answered correctly`);
 
   const rankRewards = [1000, 800, 600, 400, 200];
+  const mythicalBonus = isMythical ? 500 : 0; // 500 bonus points for mythical question
   let fastestPlayer = null;
   let fastestTime = null;
 
   correctPlayers.forEach(([id, player], index) => {
-    const reward = rankRewards[index] || 200; // all others get 200
-    player.score += reward;
+    const rankReward = rankRewards[index] || 100; // all others get 100
+    const totalReward = rankReward + mythicalBonus; // Add the bonus
+    
+    player.score += totalReward;
     
     if (index === 0) {
       fastestPlayer = player.name;
       fastestTime = player.timeTaken;
     }
     
-    console.log(`--> ${player.name} earned ${reward} points (Rank ${index + 1})`);
-    io.to(id).emit("reward", reward);
+    console.log(`--> ${player.name} earned ${totalReward} points (Rank ${index + 1}, Bonus: ${mythicalBonus})`);
+    io.to(id).emit("reward", totalReward);
   });
 
   // Send results to all players
@@ -203,7 +249,7 @@ function processQuestionResults() {
   // Update leaderboard
   io.emit("scoreUpdate", Object.values(players));
 
-  // Move to next question after 3 seconds
+  // Move to next question after 5 seconds
   setTimeout(() => {
     currentQuestion++;
     if (currentQuestion < questionList.length) {
@@ -211,7 +257,7 @@ function processQuestionResults() {
     } else {
       endGame();
     }
-  }, 3000);
+  }, 5000);
 }
 
 function endGame() {

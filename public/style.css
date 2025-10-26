@@ -398,3 +398,101 @@ input[type="text"]:focus {
   margin-right: 8px;
   color: #333;
 }
+
+/* --- MYTHICAL THEME STYLES (PURPLE) --- */
+
+/* --- MYTHICAL THEME STYLES (PURPLE) --- */
+
+/* Full body background */
+.mythical-body {
+  background-color: #0d001a !important; /* Very dark background for the whole viewport */
+}
+
+/* Container and base text color */
+.mythical-theme {
+  background-color: #0d001a; 
+  color: #cc99ff; /* Light purple/lavender text */
+}
+
+/* Screen (Quiz, Ready, Results) - Removed border glow, added dark shadow */
+.mythical-theme .screen {
+  background: #1a0033; /* Darker screen background */
+  border: 4px solid #9933FF; /* Vibrant Purple border */
+  /* NEW: Shadow to make it look sunken/inset */
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.8), /* Inner shadow for sunken look */
+    8px 8px 0px #000000; /* Outer dark shadow */
+}
+
+/* Primary Action Buttons (Join, Submit) - Darker shadow */
+.mythical-theme .btn {
+  background-color: #9933FF;
+  color: #0d001a;
+  border-color: #0d001a;
+  /* NEW: Deeper, darker shadow */
+  box-shadow: 6px 6px 0px #000000;
+}
+
+/* Option Buttons - Improved Contrast */
+.mythical-theme .options button {
+  background-color: #331a4d;
+  color: #cc99ff;
+  border-color: #9933FF;
+  /* NEW: Shadow */
+  box-shadow: 4px 4px 0px #000000;
+}
+
+.mythical-theme .options button:hover {
+  background-color: #9933FF;
+  color: #0d001a;
+}
+
+/* Timer Integration (Fixing the out-of-place look) */
+.mythical-theme .timer {
+  background-color: #331a4d; /* Darker purple background */
+  color: #ff99ff; /* Brighter purple text */
+  border: 2px solid #9933FF; /* Purple border */
+  box-shadow: 4px 4px 0px #000000; /* Dark shadow */
+}
+
+/* Countdown Circle / Next Question Timer */
+.mythical-theme .countdown-circle {
+  color: #cc99ff;
+  background-color: #331a4d;
+  border: 2px solid #9933FF;
+}
+
+/* Difficulty Badge */
+.mythical-theme .difficulty-badge {
+    background-color: #9933FF;
+    color: white;
+    border-color: #1a0033;
+    box-shadow: 2px 2px 0 #000000;
+}
+
+.mythical-theme .progress-fill {
+    background-color: #9933FF;
+}
+
+/* Leaderboard Styling */
+.mythical-theme .leaderboard {
+  background-color: #1a0033; 
+  border: 2px solid #9933FF;
+  box-shadow: 4px 4px 0px #000000;
+}
+
+.mythical-theme .leaderboard ul li {
+  background-color: #0d001a; 
+  color: #cc99ff; 
+  border-bottom: 1px solid #9933FF; 
+  box-shadow: 4px 4px 0px #000000;
+}
+
+.mythical-theme .leaderboard h3 {
+  background-color: #9933FF; 
+  color: white; 
+}
+
+.mythical-theme .leaderboard ul li strong {
+  color: #ff99ff; /* Slightly brighter purple for points */
+}

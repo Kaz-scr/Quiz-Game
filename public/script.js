@@ -27,7 +27,7 @@ function submitName() {
     return;
   }
   
-  const btn = event.target;
+  const btn = document.querySelector('#name-screen .btn');
   btn.innerHTML = '<i class="fas fa-spinner loading"></i>Joining...';
   btn.disabled = true;
   
@@ -64,6 +64,13 @@ socket.on("joinBlocked", () => {
   btn.disabled = false;
 });
 
+socket.on("nameTaken", () => {
+  const btn = document.querySelector('#name-screen .btn');
+  btn.innerHTML = '<i class="fas fa-sign-in-alt icon"></i>Join Game';
+  btn.disabled = false;
+  showNotification('That name is already taken. Please choose another!', 'error');
+});
+
 socket.on("players", (list) => {
   const container = document.getElementById("playerList");
   if (container) {
@@ -92,6 +99,15 @@ socket.on("question", (q) => {
   totalQuestions = q.total;
   
   showScreen('question-screen');
+  
+  const container = document.querySelector('.container');
+  if (q.difficulty === 'mythical') {
+    container.classList.add('mythical-theme'); 
+    document.body.classList.add('mythical-body'); 
+  } else {
+    container.classList.remove('mythical-theme'); 
+    document.body.classList.remove('mythical-body');
+  }
   
   const progressFill = document.getElementById('progress-fill');
   const progressPercent = (currentQuestionIndex / totalQuestions) * 100;
